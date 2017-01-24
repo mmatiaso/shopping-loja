@@ -1,0 +1,143 @@
+﻿@{
+    ViewBag.Title = "Lojas";
+}
+<script>
+    function Produto(nome, preco, imagem, loja, link, rating, lojanome) {
+        this.nome = nome;
+        this.preco = preco;
+        this.imagem = imagem;
+        this.loja = loja;
+        this.link = link;
+        this.rating = rating;
+        this.lojanome = lojanome;
+    }
+
+    $(document).ready(function () {
+
+        //lendo querystring
+        var urlParams = new URLSearchParams(window.location.search);
+
+        var catid = urlParams.get('c');
+        //if (catid == null) { catid = 77; }
+
+        var sellid = urlParams.get('s');
+        if (sellid == null) { sellid = 903294; }
+
+        var page = urlParams.get('page');
+        if (page == null) { page = 1; }
+
+        var k = urlParams.get('k');
+        if (k == null) { k = ""; }
+
+        $("#prox").click(function () {
+            page++;
+            location = window.location.href.split('&page')[0] + "&page=" + page;
+        });
+
+        $("#ant").click(function () {
+            if (page > 1) {
+                page--;
+                location = window.location.href.split('&page')[0] + "&page=" + page;
+            }
+        });
+
+        $("#buscar").click(function () {
+            //alert(window.location.href.split('&c')[0] + "&k=" + $("#palavra").val());
+            location = window.location.href.split('&')[0] + "&k=" + $("#palavra").val();
+            
+        });
+
+        var produtos = [];
+        var produt = new Produto("A", 1);
+        var productname = "";
+        var pricemin = "";
+        var imageurl = "";
+        var seller = "";
+        var sellername = "";
+        var link = "";
+        var rating = "";
+
+        //confeccao da url
+        var urlr = "http://sandbox.buscape.com.br/service/findOfferList/lomadee/32385252316b714d4c524d3d/BR/?sourceId=35738378&results=20&format=json";
+        if (catid != null)
+        {
+            urlr += "&categoryId=" + catid;
+        }
+        if (sellid != null) {
+            urlr += "&allowedSellers=" + sellid;
+        }
+
+        if (k != null && k != "") {
+            urlr += "&keyword=" + k;
+            $("#title").text("Busca por " + k);
+            $("#palavra").val(k);
+        }
+        if (page != null) {
+            urlr += "&page=" + page;
+        }
+        //urlr += "&sort=drate";
+        //fim confeccao da url
+
+        var app = angular.module('myApp', []);
+        app.controller('customersCtrl', function ($scope, $http) {
+            
+
+            $http.get(urlr).then(function (response) {
+                for (i in response.data.offer) {
+                    productname = response.data.offer[i].offer.offername;
+                    pricemin = response.data.offer[i].offer.price.value;
+                    imageurl = response.data.offer[i].offer.thumbnail.url;
+                    seller = response.data.offer[i].offer.seller.thumbnail.url;
+                    sellername = response.data.offer[i].offer.seller.sellername;
+                    link = response.data.offer[i].offer.links[0].link.url;
+                    rating = response.data.offer[i].offer.seller.rating.useraveragerating.rating;
+                    produt = new Produto(productname, pricemin, imageurl, seller, link, rating, sellername);
+                    produtos.push(produt);
+                }
+                //alert(pNome[1]);
+                $scope.mylist = produtos;
+                $scope.lojaimg = seller;
+                $scope.rating = rating;
+                $scope.lojanome = sellername;
+            });
+
+
+        });
+    });
+</script>
+<div ng-app="myApp" ng-controller="customersCtrl">
+    <div class="col-md-2 sidebar">
+        <img src="{{ lojaimg }}" height="70px" />
+        <h1>{{ lojanome }}</h1>
+        <hr />
+        <p>
+            <input type="text" id="palavra" placeholder="Buscar na loja" /> <input type="button" id="buscar" value="Buscar" />
+        </p>
+    </div>
+    <div class="col-md-10">
+        <h3 id="title">Smartphones e Celulares</h3>
+        <hr />
+        <div>
+            <div class="produto-lista" ng-repeat="x in mylist">
+               <a href="{{ x.link }}">
+                 
+                <img src="{{ x.imagem }}" height="150px" /><br />
+                <span class="fonte14bold">{{ x.nome.substring(0, 90); }}...</span><br />
+                <span class="fonte16bold red">R$ {{ x.preco.replace(".",",") }}</span><br />
+                <button type="button" class="btn btn-success marginstd"> Comprar  </button>
+               
+              </a>
+            </div>
+        </div>
+        <div class="pagination">
+            <a id="ant" href="">< Anterior</a>&nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp;<a id="prox" href="">Próximo ></a> 
+        </div>
+
+
+
+
+    </div>
+</div>
+
+
+

@@ -1,0 +1,54 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+@section header {
+   <script type="text/javascript">
+       var urlr = "";//"http://sandbox.buscape.com/service/findProductList/lomadee/32385252316b714d4c524d3d/?categoryId=77&format=json";
+       var x = "";
+       $(document).ready(function () {
+           $.ajax({
+               url: "http://sandbox.buscape.com/service/findProductList/lomadee/32385252316b714d4c524d3d/?categoryId=77&format=json",
+               success: function (result) {
+                   for (i in result.product) {
+                       x += "<h1>" + result.product[i].product.productname + "</h1>";
+                   }
+                   alert(x);
+
+                   //alert(result.category.links.link[0].url);
+                   //$.each(result.product.product.productname, function (key, value) {
+                   //    urlr += value
+                   //    alert(urlr);
+                   //});
+                   
+               },
+               error: function(result){
+                   alert("error");
+               }
+       });
+       });
+    
+       </script> 
+}
+<div>
+    <div class="col-md-2 sidebar desktop">
+        Menu
+    </div>
+    <div class="col-md-10">
+        <div class="col-md-3 produto-lista">
+            
+        </div>
+        <div class="col-md-3 produto-lista">
+            
+        </div>
+        <div class="col-md-3 produto-lista">
+            
+        </div>
+        <div class="col-md-3 produto-lista">
+            
+        </div>
+        <div class="col-md-3 produto-lista">
+            
+        </div>
+    </div>
+</div>
+

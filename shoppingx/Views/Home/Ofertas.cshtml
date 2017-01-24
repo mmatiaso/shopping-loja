@@ -1,0 +1,74 @@
+﻿@{
+    ViewBag.Title = "Ofertas";
+}
+
+<script>
+    function Produto(nome, preco, imagem, loja, link) {
+        this.nome = nome;
+        this.preco = preco;
+        this.imagem = imagem;
+        this.loja = loja;
+        this.link = link
+    }
+
+    $(document).ready(function () {
+
+        var produtos = [];
+        var produt = new Produto("A", 1);
+        var productname = "";
+        var pricemin = "";
+        var imageurl = "";
+        var seller = "";
+        var link = "";
+
+        var urlr = "http://sandbox.buscape.com.br/service/findOfferList/lomadee/32385252316b714d4c524d3d/BR/?sourceId=35738378&categoryId=77&format=json";
+        var app = angular.module('myApp', []);
+        app.controller('customersCtrl', function ($scope, $http) {
+            var arr = ['oi', 'hello'];
+
+            $http.get(urlr).then(function (response) {
+                for (i in response.data.offer) {
+                    productname = response.data.offer[i].offer.offername;
+                    pricemin = response.data.offer[i].offer.price.value;
+                    imageurl = response.data.offer[i].offer.thumbnail.url;
+                    seller = response.data.offer[i].offer.seller.sellername;
+                    link = response.data.offer[i].offer.links[0].link.url;
+                    produt = new Produto(productname, pricemin, imageurl, seller, link);
+                    produtos.push(produt);
+                }
+                //alert(pNome[1]);
+                $scope.mylist = produtos;
+            });
+
+
+        });
+    });
+</script>
+<div>
+    <div class="col-md-2 sidebar desktop">
+        Menu
+    </div>
+    <div class="col-md-10">
+        <h1>Smartphones</h1>
+        <hr />
+        <div ng-app="myApp" ng-controller="customersCtrl">
+            
+            <div class="produto-lista" ng-repeat="x in mylist">
+               <a href="{{ x.link }}">
+                <div> 
+                <img src="{{ x.imagem }}" height="150px"; /><br />
+                <span class="fonte14bold">{{ x.nome }}</span><br />
+                <span class="fonte16bold">R$ {{ x.preco }}</span><br />
+                <span class="fonte14bold">{{ x.loja }}</span>
+               </div>
+              </a>
+            </div>
+        </div>
+
+
+
+
+
+    </div>
+</div>
+
