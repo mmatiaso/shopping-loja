@@ -113,20 +113,25 @@
         <p>
             <input type="text" id="palavra" placeholder="Buscar na loja" /> <input type="button" id="buscar" value="Buscar" />
         </p>
+        <hr />
+        <h4>Cupoms:</h4>
+        <p>Em breve.</p>
     </div>
     <div class="col-md-10">
         <h3 id="title">Smartphones e Celulares</h3>
         <hr />
         <div>
             <div class="produto-lista" ng-repeat="x in mylist">
-               <a href="{{ x.link }}">
+               <a href="{{ x.link }}" title="{{ x.nome }}">
                  
                 <img src="{{ x.imagem }}" height="150px" /><br />
                 <span class="fonte14bold">{{ x.nome.substring(0, 90); }}...</span><br />
                 <span class="fonte16bold red">R$ {{ x.preco.replace(".",",") }}</span><br />
                 <button type="button" class="btn btn-success marginstd"> Comprar  </button>
+
                
-              </a>
+              </a><br />
+                <div class="marginstd"><a href="#">Menor Preço em Outra Loja?</a></div>
             </div>
         </div>
         <div class="pagination">
