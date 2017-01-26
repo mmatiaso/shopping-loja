@@ -31,7 +31,7 @@
                     productname = response.data.offer[i].offer.offername;
                     pricemin = response.data.offer[i].offer.price.value;
                     imageurl = response.data.offer[i].offer.thumbnail.url;
-                    seller = response.data.offer[i].offer.seller.sellername;
+                    seller = response.data.offer[i].offer.seller.thumbnail.url;
                     link = response.data.offer[i].offer.links[0].link.url;
                     produt = new Produto(productname, pricemin, imageurl, seller, link);
                     produtos.push(produt);
@@ -56,10 +56,11 @@
             <div class="produto-lista" ng-repeat="x in mylist">
                <a href="{{ x.link }}">
                 <div> 
-                <img src="{{ x.imagem }}" height="150px"; /><br />
-                <span class="fonte14bold">{{ x.nome }}</span><br />
-                <span class="fonte16bold">R$ {{ x.preco }}</span><br />
-                <span class="fonte14bold">{{ x.loja }}</span>
+                <img src="{{ x.imagem }}" height="150px" /><br />
+                <span class="fonte14bold">{{ x.nome.substring(0, 90); }}...</span><br />
+                <span class="fonte16bold red">R$ {{ x.preco.replace(".",",") }}</span><br />
+                <button type="button" class="btn btn-success marginstd"> Comprar  </button><br /><br />
+                <img src="{{ x.loja }}" />
                </div>
               </a>
             </div>
