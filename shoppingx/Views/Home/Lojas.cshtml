@@ -44,7 +44,7 @@
         $("#buscar").click(function () {
             //alert(window.location.href.split('&c')[0] + "&k=" + $("#palavra").val());
             location = window.location.href.split('&')[0] + "&k=" + $("#palavra").val();
-            
+
         });
 
         var produtos = [];
@@ -59,8 +59,7 @@
 
         //confeccao da url
         var urlr = "http://sandbox.buscape.com.br/service/findOfferList/lomadee/32385252316b714d4c524d3d/BR/?sourceId=35738378&results=20&format=json";
-        if (catid != null)
-        {
+        if (catid != null) {
             urlr += "&categoryId=" + catid;
         }
         if (sellid != null) {
@@ -80,7 +79,7 @@
 
         var app = angular.module('myApp', []);
         app.controller('customersCtrl', function ($scope, $http) {
-            
+
 
             $http.get(urlr).then(function (response) {
                 for (i in response.data.offer) {
@@ -111,7 +110,10 @@
         <h1>{{ lojanome }}</h1>
         <hr />
         <p>
-            <input type="text" id="palavra" placeholder="Buscar na loja" /> <input type="button" id="buscar" value="Buscar" />
+           <form id="form1">
+            <input type="text" id="palavra" placeholder="Buscar na loja" required />
+            <input type="button" id="buscar" value="Buscar" />
+           </form>
         </p>
         <hr />
         <h4>Cupoms:</h4>
@@ -122,20 +124,22 @@
         <hr />
         <div>
             <div class="produto-lista" ng-repeat="x in mylist">
-               <a href="{{ x.link }}" title="{{ x.nome }}">
-                 
-                <img src="{{ x.imagem }}" height="150px" /><br />
-                <span class="fonte14bold">{{ x.nome.substring(0, 90); }}...</span><br />
-                <span class="fonte16bold red">R$ {{ x.preco.replace(".",",") }}</span><br />
-                <button type="button" class="btn btn-success marginstd"> Comprar  </button>
+                <a href="{{ x.link }}" title="{{ x.nome }}">
 
-               
-              </a><br />
-                <div class="marginstd"><a href="#">Menor Preço em Outra Loja?</a></div>
+                    <img src="{{ x.imagem }}" height="150px" /><br />
+                    <span class="fonte14bold">{{ x.nome.substring(0, 90); }}...</span><br />
+                    <span class="fonte18bold red">R$ {{ x.preco.replace(".",",") }}</span><br />
+                    <button type="button" class="btn btn-success marginstd">Comprar</button>
+                    <button type="button" class="btn btn-success marginstd">Garimpar</button>
+
+
+                </a>
+                
+                
             </div>
         </div>
         <div class="pagination">
-            <a id="ant" href="">< Anterior</a>&nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp;<a id="prox" href="">Próximo ></a> 
+            <a id="ant" href="">< Anterior</a>&nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp;<a id="prox" href="">Próximo ></a>
         </div>
 
 
