@@ -3,13 +3,17 @@
 }
 
 <script>
+    
+
     function Produto(nome, preco, imagem, loja, link) {
         this.nome = nome;
-        this.preco = preco;
+        this.preco = moeda(preco,2,',','.');
         this.imagem = imagem;
         this.loja = loja;
         this.link = link
     }
+
+    
 
     $(document).ready(function () {
 
@@ -21,10 +25,70 @@
         var seller = "";
         var link = "";
 
-        var urlr = "http://sandbox.buscape.com.br/service/findOfferList/lomadee/32385252316b714d4c524d3d/BR/?sourceId=35738378&categoryId=77&format=json";
+        //lendo querystring
+        var urlParams = new URLSearchParams(window.location.search);
+
+        //categoriaid
+        var catid = urlParams.get('c');
+        if (catid == null) { catid = 77; }
+
+        //page
+        var page = urlParams.get('page');
+        if (page == null) { page = 1; }
+
+        //keyword
+        var k = urlParams.get('k');
+        if (k == null) { k = ""; }
+
+        //keyword
+        var sort = urlParams.get('sort');
+        //if (sort == null) { sort = "dprice"; }
+
+        //paginacao
+        $("#prox").click(function () {
+            page++;
+            location = window.location.href.split('&page')[0] + "&page=" + page;
+        });
+
+        $("#ant").click(function () {
+            if (page > 1) {
+                page--;
+                location = window.location.href.split('&page')[0] + "&page=" + page;
+            }
+        });
+
+        //busca
+        $("#buscar").click(function () {
+            //alert(window.location.href.split('&c')[0] + "&k=" + $("#palavra").val());
+            location = window.location.href.split('&')[0] + "&k=" + $("#palavra").val() + "&sort=price&page=1";
+
+        });
+
+        var urlr = "http://sandbox.buscape.com.br/service/findOfferList/lomadee/32385252316b714d4c524d3d/BR/?sourceId=35738378&results=20&format=json";
+
+        //categoriaid
+        if (catid != null) {
+            urlr += "&categoryId=" + catid;
+        }
+        //keyword
+        if (k != null && k != "") {
+            urlr += "&keyword=" + k;
+            $("#title").text("Busca por " + k);
+            $("#palavra").val(k);
+        }
+        //sort
+        if (sort != null) {
+            urlr += "&sort=" + sort;
+        }
+        //page
+        if (page != null) {
+            urlr += "&page=" + page;
+        }
+        
+
         var app = angular.module('myApp', []);
         app.controller('customersCtrl', function ($scope, $http) {
-            var arr = ['oi', 'hello'];
+            
 
             $http.get(urlr).then(function (response) {
                 for (i in response.data.offer) {
@@ -38,35 +102,62 @@
                 }
                 //alert(pNome[1]);
                 $scope.mylist = produtos;
+                if (produtos.length < 1) {
+                    $scope.vazio = "Não há produtos com o nome indicado.";
+                }
             });
 
 
         });
     });
 </script>
-<div>
+<div class="conteudo">
     <div class="col-md-2 sidebar desktop">
-        Menu
+        @*<img src="" height="70px" />*@
+        <h1>Smartphones e Telefonia</h1>
+        <hr />
+        <p>Busca na categoria:</p>
+        <p>
+            <input type="text" id="palavra" placeholder="Buscar o produto" style="width:80%" />
+            <input type="button" id="buscar" value="Ok" />
+        </p>
+        <hr />
+        <p><b>Procurar também por:</b></p>
+        <p><a href="/home/ofertas?c=77&page=1">Smartphones e Celulares</a></p>
+        <p><a href="#">Telefonia Fixa</a></p>
+        @*<ul>
+            <li><b>pelo nome do produto:</b> digite uma parte do nome do produto (ex. para Samsung Galaxy 5, digite galaxy 5)</li>
+        </ul>*@
     </div>
     <div class="col-md-10">
-        <h1>Smartphones</h1>
+        <h3 id="title">>> Smartphones e Celulares</h3>
         <hr />
-        <div ng-app="myApp" ng-controller="customersCtrl">
-            
+        
+        <div ng-app="myApp" ng-controller="customersCtrl" class="conteudo">
+            <span>{{ vazio }}</span>
             <div class="produto-lista" ng-repeat="x in mylist">
-               <a href="{{ x.link }}">
-                <div> 
-                <img src="{{ x.imagem }}" height="150px" /><br />
-                <span class="fonte14bold">{{ x.nome.substring(0, 90); }}...</span><br />
-                <span class="fonte16bold red">R$ {{ x.preco.replace(".",",") }}</span><br />
-                <button type="button" class="btn btn-success marginstd"> Comprar  </button><br /><br />
-                <img src="{{ x.loja }}" />
-               </div>
-              </a>
+
+                <a href="{{ x.link }}" title="{{ x.nome }}">
+                    <div>
+                        <img src="{{ x.imagem }}" height="150px" /><br />
+                        <div class="fonte14bold height70">{{ x.nome.substring(0, 80); }}..</div>
+                        <br />
+                        <span class="fonte18bold red">R$ {{ x.preco }}</span><br />
+                        <button type="button" class="btn btn-success marginstd">Comprar</button>
+                        <button type="button" class="btn btn-success marginstd">Garimpar</button>
+                        <br />
+                        <br />
+                        <img src="{{ x.loja }}" />
+                    </div>
+                </a>
+
+
             </div>
         </div>
 
-
+        <div class="pagination">
+            <a id="ant" href="">< Anterior</a>&nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp;<a id="prox" href="">Próximo ></a>
+        </div>
 
 
 
