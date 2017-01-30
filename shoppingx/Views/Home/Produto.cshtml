@@ -1,0 +1,253 @@
+﻿@model shoppingx.Models.Produto
+
+
+
+
+<script>
+
+
+    function Produto(id, nome, preco, imagem, loja, link) {
+        this.nome = nome;
+        this.preco = moeda(preco, 2, ',', '.');
+        this.imagem = imagem;
+        this.loja = loja;
+        this.link = link;
+        this.id = id;
+    }
+
+
+
+
+
+
+    $(document).ready(function () {
+
+
+
+        //lendo querystring
+        var urlParams = new URLSearchParams(window.location.search);
+
+        //categoriaid
+        var proid = urlParams.get('id');
+        //if (proid == null) { catid = 77; }
+
+        //page
+        var page = urlParams.get('page');
+        if (page == null) { page = 1; }
+
+        //keyword
+        //var k = urlParams.get('k');
+        //if (k == null) { k = ""; }
+
+        //keyword
+        var sort = urlParams.get('sort');
+        //if (sort == null) { sort = "dprice"; }
+
+        //paginacao
+        $("#prox").click(function () {
+            page++;
+            location = window.location.href.split('&page')[0] + "&page=" + page;
+        });
+
+        $("#ant").click(function () {
+            if (page > 1) {
+                page--;
+                location = window.location.href.split('&page')[0] + "&page=" + page;
+            }
+        });
+
+        //busca
+        $("#buscar").click(function () {
+            //alert(window.location.href.split('&c')[0] + "&k=" + $("#palavra").val());
+            location = window.location.href.split('&')[0] + "&k=" + $("#palavra").val() + "&sort=price&page=1";
+
+        });
+
+        //$("#tab-offer").click(function () {
+        //    $("#ofertas").show();
+        //    $("#ofertas").class('active');
+        //    $("#especificacao").hide();
+        //});
+
+        //$("#tab-spec").click(function () {
+        //    $("#ofertas").hide();
+        //    $("#especificacao").show();
+        //    $("#especificacao").class('active');
+        //});
+
+        var urlr = "http://sandbox.buscape.com.br/service/findOfferList/lomadee/32385252316b714d4c524d3d/BR/?sourceId=35738378&results=20&format=json";
+
+
+        //categoriaid
+        if (proid != null) {
+            urlr += "&productId=" + proid;
+        }
+        //keyword
+        @*if (k != null && k != "") {
+            urlr += "&keyword=" + k;
+            $("#title").html("<a href='/home/ofertas?c=@Model.LomadeeId&page=1'>@Model.Nome</a> > Busca por " + k);
+            $("#palavra").val(k);
+        }*@
+        //sort
+        if (sort != null) {
+            urlr += "&sort=" + sort;
+        }
+        //page
+        if (page != null) {
+            urlr += "&page=" + page;
+        }
+
+        //alert(urlr);
+
+        var produtos = [];
+        var produt = new Produto("A", 1);
+        var productid = "";
+        var productname = "";
+        var pricemin = "";
+        var imageurl = "";
+        var seller = "";
+        var link = "";
+
+        var specs = [];
+        var label = [];
+
+        var app = angular.module('myApp', []);
+        app.controller('ProdutoCtrl', function ($scope, $http) {
+
+
+
+            $http.get(urlr).then(function (response) {
+
+                //for (i in response.data.product) {
+                //    match = response.data.product[i].product.productname;
+                //}
+
+                for (i in response.data.offer) {
+                    productid = response.data.offer[i].offer.productid;
+                    productname = response.data.offer[i].offer.offername;
+                    pricemin = response.data.offer[i].offer.price.value;
+                    if ('thumbnail' in response.data.offer[i].offer) {
+                        imageurl = response.data.offer[i].offer.thumbnail.url;
+                    }
+                    if ('thumbnail' in response.data.offer[i].offer.seller) {
+                        seller = response.data.offer[i].offer.seller.thumbnail.url;
+                    }
+                    link = response.data.offer[i].offer.links[0].link.url;
+                    produt = new Produto(productid, productname, pricemin, imageurl, seller, link);
+                    produtos.push(produt);
+                }
+                //alert(pNome[1]);
+                $scope.mylist = produtos;
+                if (produtos.length < 1) {
+                    $scope.vazio = "Não há produtos com o nome indicado nesta categoria.";
+                }
+
+                //imagem
+                if (response.data.product[0].product.thumbnail.formats.length > 2) {
+                    $scope.produtoimg = response.data.product[0].product.thumbnail.formats[2].formats.url;
+                }
+                else {
+                    $scope.produtoimg = response.data.product[0].product.thumbnail.formats[0].formats.url;
+                }
+
+                //nome oficial do produto
+                $scope.produtonome = response.data.product[0].product.productname;
+
+                //titulo da pagina
+                document.title = response.data.product[0].product.productname + " - " + "Shopping X";
+
+                //especificacao
+                if ('specification' in response.data.product[0].product) {
+                    //alert(response.data.product[0].product.specification.item.length);
+                    for (i in response.data.product[0].product.specification.item) {
+                        specs[i] = response.data.product[0].product.specification.item[i].item;
+                        //alert(specs[0]);
+                    }
+                }
+                //alert(specs[0]);
+                $scope.especificacao = specs;
+                $scope.categoria = response.data.category.name;
+
+            });
+
+
+        });
+    });
+</script>
+
+
+
+<div class="conteudo" ng-app="myApp" ng-controller="ProdutoCtrl" ng-init="tab=1">
+    <div class="col-md-2 sidebar">
+        <img src="{{ produtoimg }}" width="90%" />
+        <h1>{{ produtonome }}</h1>
+        <h4><a href="javascript: history.back(-1);"><< {{ categoria }}</a></h4>
+        <hr />
+        <a href="/home/produto/" class="btn btn-success marginstd" title="Siga o preço desse produto">Seguir Preço deste Produto</a>
+    </div>
+    <div class="col-md-10">
+
+
+        <div class="conteudo">
+            <ul class="nav nav-tabs">
+                <li><a ng-click="tab=1" ng-class="{'active' : tab==1}">Melhores Preços</a></li>
+                <li><a ng-click="tab=2" ng-class="{'active' : tab==2}">Especificação</a></li>
+            </ul>
+            <div class="tabs-container">
+                <div id="ofertas" class="tab-content" ng-show="tab == 1">
+                    <span class="fonte16bold">{{ vazio }}</span>
+                    <div class="produto-lista" ng-repeat="x in mylist">
+
+
+                        <div>
+                            <a href="{{ x.link }}" title="{{ x.nome }}">
+                                <img src="{{ x.imagem }}" height="150px" /><br />
+                                <div class="fonte14bold height70">{{ x.nome.substring(0, 80); }}..</div>
+                                <br />
+                                <span class="fonte18bold red">R$ {{ x.preco }}</span><br />
+                            </a>
+                            <button type="button" class="btn btn-success marginstd" title="Compre esse produto nessa loja">Comprar</button>
+                            <br />
+                            <br />
+                            <img src="{{ x.loja }}" />
+                        </div>
+
+
+
+                    </div>
+
+                    <div class="pagination">
+                        <a id="ant" href="#">< Anterior</a>&nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp;<a id="prox" href="#">Próximo ></a>
+                    </div>
+
+                </div>
+                <div id="especificacao" class="tab-content" ng-show="tab == 2">
+
+                    <div class="lista-specs">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Atributo</th>
+                                    <th>Valor</th>
+                                </tr>
+                            </thead>
+                            <tr ng-repeat="y in especificacao">
+                                <td>{{ y.label }}</td>
+                                <td>
+                                    <div ng-repeat="z in y.value">{{ z }}</div>
+
+                                </td>
+                            </tr>
+                        </table>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+
+
+    </div>
+</div>

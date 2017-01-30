@@ -133,3 +133,5 @@ D:\Github\shopping-loja\shoppingx\bin\DotNetOpenAuth.OpenId.RelyingParty.xml
 D:\Github\shopping-loja\shoppingx\obj\Debug\shoppingx.csprojResolveAssemblyReference.cache
 D:\Github\shopping-loja\shoppingx\obj\Debug\shoppingx.dll
 D:\Github\shopping-loja\shoppingx\obj\Debug\shoppingx.pdb
+C:\WorkAreaMOL\Projetos_VS2010\Development_Enviroment\Github\shopping-loja\shopping-loja\shoppingx\bin\EntityFramework.SqlServer.dll
+C:\WorkAreaMOL\Projetos_VS2010\Development_Enviroment\Github\shopping-loja\shopping-loja\shoppingx\bin\EntityFramework.SqlServer.xml
