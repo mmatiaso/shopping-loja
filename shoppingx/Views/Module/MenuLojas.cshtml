@@ -1,0 +1,17 @@
+﻿@model IEnumerable<shoppingx.Models.Loja>
+
+@{
+    Layout = null;
+}
+<li class="dropdown">
+       <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+           Lojas 
+           <span class="caret"></span>
+       </a>
+    <ul class="dropdown-menu menu3d">
+@foreach (var loja in Model)
+{     
+     <li><a href="/home/lojas?s=@loja.LomadeeId&page=1">@loja.Nome</a></li>
+}
+        </ul>
+    </li>

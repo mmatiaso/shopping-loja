@@ -1,0 +1,538 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="shoppingxModel.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityContainer Name="shoppingxModelStoreContainer">
+          <EntitySet Name="Categoria" EntityType="shoppingxModel.Store.Categoria" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="Loja" EntityType="shoppingxModel.Store.Loja" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="Preco" EntityType="shoppingxModel.Store.Preco" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="Produto" EntityType="shoppingxModel.Store.Produto" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="Subcategoria" EntityType="shoppingxModel.Store.Subcategoria" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="sysdiagrams" EntityType="shoppingxModel.Store.sysdiagrams" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="Usuario" EntityType="shoppingxModel.Store.Usuario" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="Usuprod" EntityType="shoppingxModel.Store.Usuprod" store:Type="Tables" Schema="dbo" />
+          <AssociationSet Name="FK_Preco_Loja" Association="shoppingxModel.Store.FK_Preco_Loja">
+            <End Role="Loja" EntitySet="Loja" />
+            <End Role="Preco" EntitySet="Preco" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Preco_Produto" Association="shoppingxModel.Store.FK_Preco_Produto">
+            <End Role="Produto" EntitySet="Produto" />
+            <End Role="Preco" EntitySet="Preco" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Produto_Subcategoria" Association="shoppingxModel.Store.FK_Produto_Subcategoria">
+            <End Role="Subcategoria" EntitySet="Subcategoria" />
+            <End Role="Produto" EntitySet="Produto" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Subcategoria_Categoria" Association="shoppingxModel.Store.FK_Subcategoria_Categoria">
+            <End Role="Categoria" EntitySet="Categoria" />
+            <End Role="Subcategoria" EntitySet="Subcategoria" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Usuprod_Produto" Association="shoppingxModel.Store.FK_Usuprod_Produto">
+            <End Role="Produto" EntitySet="Produto" />
+            <End Role="Usuprod" EntitySet="Usuprod" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Usuprod_Usuario" Association="shoppingxModel.Store.FK_Usuprod_Usuario">
+            <End Role="Usuario" EntitySet="Usuario" />
+            <End Role="Usuprod" EntitySet="Usuprod" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="Categoria">
+          <Key>
+            <PropertyRef Name="CategoriaId" />
+          </Key>
+          <Property Name="CategoriaId" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="Nome" Type="varchar" MaxLength="50" />
+          <Property Name="lomadeeId" Type="int" />
+        </EntityType>
+        <EntityType Name="Loja">
+          <Key>
+            <PropertyRef Name="LojaId" />
+          </Key>
+          <Property Name="LojaId" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="LomadeeId" Type="int" />
+          <Property Name="Nome" Type="varchar" MaxLength="50" />
+          <Property Name="Logo" Type="varchar" MaxLength="200" />
+          <Property Name="Avaliacao" Type="numeric" Precision="1" />
+        </EntityType>
+        <EntityType Name="Preco">
+          <Key>
+            <PropertyRef Name="PrecoId" />
+          </Key>
+          <Property Name="PrecoId" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="ProdutoId" Type="int" />
+          <Property Name="LojaId" Type="int" />
+          <Property Name="Preco" Type="int" />
+          <Property Name="Data" Type="datetime" />
+        </EntityType>
+        <EntityType Name="Produto">
+          <Key>
+            <PropertyRef Name="ProdutoId" />
+          </Key>
+          <Property Name="ProdutoId" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="LomadeeId" Type="int" />
+          <Property Name="Nome" Type="varchar" MaxLength="300" />
+          <Property Name="Clicks" Type="int" />
+          <Property Name="Compras" Type="int" />
+          <Property Name="Receita" Type="numeric" Precision="2" />
+          <Property Name="SubcategoriaId" Type="int" />
+        </EntityType>
+        <EntityType Name="Subcategoria">
+          <Key>
+            <PropertyRef Name="SubcategoriaId" />
+          </Key>
+          <Property Name="SubcategoriaId" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="CategoriaId" Type="int" />
+          <Property Name="Nome" Type="varchar" MaxLength="50" />
+          <Property Name="LomadeeId" Type="int" />
+          <Property Name="Descricao" Type="varchar" MaxLength="300" />
+          <Property Name="Tags" Type="varchar" MaxLength="300" />
+          <Property Name="Imagem" Type="varchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="sysdiagrams">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="nvarchar" Nullable="false" MaxLength="128" />
+          <Property Name="principal_id" Type="int" Nullable="false" />
+          <Property Name="diagram_id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="version" Type="int" />
+          <Property Name="definition" Type="varbinary(max)" />
+        </EntityType>
+        <EntityType Name="Usuario">
+          <Key>
+            <PropertyRef Name="UsuarioId" />
+          </Key>
+          <Property Name="UsuarioId" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="Nome" Type="varchar" MaxLength="50" />
+          <Property Name="Email" Type="varchar" MaxLength="100" />
+          <Property Name="Senha" Type="varchar" MaxLength="20" />
+          <Property Name="DataCriacao" Type="datetime" />
+        </EntityType>
+        <EntityType Name="Usuprod">
+          <Key>
+            <PropertyRef Name="UsuProdId" />
+          </Key>
+          <Property Name="UsuProdId" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="UsuarioId" Type="int" />
+          <Property Name="ProdutoId" Type="int" />
+          <Property Name="Acao" Type="varchar" MaxLength="10" />
+          <Property Name="Data" Type="datetime" />
+        </EntityType>
+        <Association Name="FK_Preco_Loja">
+          <End Role="Loja" Type="shoppingxModel.Store.Loja" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Preco" Type="shoppingxModel.Store.Preco" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Loja">
+              <PropertyRef Name="LojaId" />
+            </Principal>
+            <Dependent Role="Preco">
+              <PropertyRef Name="LojaId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Preco_Produto">
+          <End Role="Produto" Type="shoppingxModel.Store.Produto" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Preco" Type="shoppingxModel.Store.Preco" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Produto">
+              <PropertyRef Name="ProdutoId" />
+            </Principal>
+            <Dependent Role="Preco">
+              <PropertyRef Name="ProdutoId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Produto_Subcategoria">
+          <End Role="Subcategoria" Type="shoppingxModel.Store.Subcategoria" Multiplicity="0..1" />
+          <End Role="Produto" Type="shoppingxModel.Store.Produto" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Subcategoria">
+              <PropertyRef Name="SubcategoriaId" />
+            </Principal>
+            <Dependent Role="Produto">
+              <PropertyRef Name="SubcategoriaId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Subcategoria_Categoria">
+          <End Role="Categoria" Type="shoppingxModel.Store.Categoria" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Subcategoria" Type="shoppingxModel.Store.Subcategoria" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Categoria">
+              <PropertyRef Name="CategoriaId" />
+            </Principal>
+            <Dependent Role="Subcategoria">
+              <PropertyRef Name="CategoriaId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Usuprod_Produto">
+          <End Role="Produto" Type="shoppingxModel.Store.Produto" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Usuprod" Type="shoppingxModel.Store.Usuprod" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Produto">
+              <PropertyRef Name="ProdutoId" />
+            </Principal>
+            <Dependent Role="Usuprod">
+              <PropertyRef Name="ProdutoId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Usuprod_Usuario">
+          <End Role="Usuario" Type="shoppingxModel.Store.Usuario" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Usuprod" Type="shoppingxModel.Store.Usuprod" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Usuario">
+              <PropertyRef Name="UsuarioId" />
+            </Principal>
+            <Dependent Role="Usuprod">
+              <PropertyRef Name="UsuarioId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="shoppingxModel" Alias="Self" p1:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:p1="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="shoppingxEntities" p1:LazyLoadingEnabled="true">
+          <EntitySet Name="Categorias" EntityType="shoppingxModel.Categoria" />
+          <EntitySet Name="Lojas" EntityType="shoppingxModel.Loja" />
+          <EntitySet Name="Precoes" EntityType="shoppingxModel.Preco" />
+          <EntitySet Name="Produtoes" EntityType="shoppingxModel.Produto" />
+          <EntitySet Name="Subcategorias" EntityType="shoppingxModel.Subcategoria" />
+          <EntitySet Name="sysdiagrams" EntityType="shoppingxModel.sysdiagram" />
+          <EntitySet Name="Usuarios" EntityType="shoppingxModel.Usuario" />
+          <AssociationSet Name="FK_Subcategoria_Categoria" Association="shoppingxModel.FK_Subcategoria_Categoria">
+            <End Role="Categoria" EntitySet="Categorias" />
+            <End Role="Subcategoria" EntitySet="Subcategorias" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Preco_Loja" Association="shoppingxModel.FK_Preco_Loja">
+            <End Role="Loja" EntitySet="Lojas" />
+            <End Role="Preco" EntitySet="Precoes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Preco_Produto" Association="shoppingxModel.FK_Preco_Produto">
+            <End Role="Produto" EntitySet="Produtoes" />
+            <End Role="Preco" EntitySet="Precoes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Produto_Subcategoria" Association="shoppingxModel.FK_Produto_Subcategoria">
+            <End Role="Subcategoria" EntitySet="Subcategorias" />
+            <End Role="Produto" EntitySet="Produtoes" />
+          </AssociationSet>
+          <EntitySet Name="Usuprods" EntityType="shoppingxModel.Usuprod" />
+          <AssociationSet Name="FK_Usuprod_Produto" Association="shoppingxModel.FK_Usuprod_Produto">
+            <End Role="Produto" EntitySet="Produtoes" />
+            <End Role="Usuprod" EntitySet="Usuprods" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Usuprod_Usuario" Association="shoppingxModel.FK_Usuprod_Usuario">
+            <End Role="Usuario" EntitySet="Usuarios" />
+            <End Role="Usuprod" EntitySet="Usuprods" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="Categoria">
+          <Key>
+            <PropertyRef Name="CategoriaId" />
+          </Key>
+          <Property Name="CategoriaId" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+          <Property Name="Nome" Type="String" MaxLength="50" Unicode="false" FixedLength="false" />
+          <Property Name="lomadeeId" Type="Int32" />
+          <NavigationProperty Name="Subcategorias" Relationship="shoppingxModel.FK_Subcategoria_Categoria" FromRole="Categoria" ToRole="Subcategoria" />
+        </EntityType>
+        <EntityType Name="Loja">
+          <Key>
+            <PropertyRef Name="LojaId" />
+          </Key>
+          <Property Name="LojaId" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+          <Property Name="LomadeeId" Type="Int32" />
+          <Property Name="Nome" Type="String" MaxLength="50" Unicode="false" FixedLength="false" />
+          <Property Name="Logo" Type="String" MaxLength="200" Unicode="false" FixedLength="false" />
+          <Property Name="Avaliacao" Type="Decimal" Precision="1" Scale="0" />
+          <NavigationProperty Name="Precoes" Relationship="shoppingxModel.FK_Preco_Loja" FromRole="Loja" ToRole="Preco" />
+        </EntityType>
+        <EntityType Name="Preco">
+          <Key>
+            <PropertyRef Name="PrecoId" />
+          </Key>
+          <Property Name="PrecoId" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+          <Property Name="ProdutoId" Type="Int32" />
+          <Property Name="LojaId" Type="Int32" />
+          <Property Name="Preco1" Type="Int32" />
+          <Property Name="Data" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="Loja" Relationship="shoppingxModel.FK_Preco_Loja" FromRole="Preco" ToRole="Loja" />
+          <NavigationProperty Name="Produto" Relationship="shoppingxModel.FK_Preco_Produto" FromRole="Preco" ToRole="Produto" />
+        </EntityType>
+        <EntityType Name="Produto">
+          <Key>
+            <PropertyRef Name="ProdutoId" />
+          </Key>
+          <Property Name="ProdutoId" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+          <Property Name="LomadeeId" Type="Int32" />
+          <Property Name="Nome" Type="String" MaxLength="300" Unicode="false" FixedLength="false" />
+          <Property Name="Clicks" Type="Int32" />
+          <Property Name="Compras" Type="Int32" />
+          <Property Name="Receita" Type="Decimal" Precision="2" Scale="0" />
+          <Property Name="SubcategoriaId" Type="Int32" />
+          <NavigationProperty Name="Precoes" Relationship="shoppingxModel.FK_Preco_Produto" FromRole="Produto" ToRole="Preco" />
+          <NavigationProperty Name="Subcategoria" Relationship="shoppingxModel.FK_Produto_Subcategoria" FromRole="Produto" ToRole="Subcategoria" />
+          <NavigationProperty Name="Usuprods" Relationship="shoppingxModel.FK_Usuprod_Produto" FromRole="Produto" ToRole="Usuprod" />
+        </EntityType>
+        <EntityType Name="Subcategoria">
+          <Key>
+            <PropertyRef Name="SubcategoriaId" />
+          </Key>
+          <Property Name="SubcategoriaId" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+          <Property Name="CategoriaId" Type="Int32" />
+          <Property Name="Nome" Type="String" MaxLength="50" Unicode="false" FixedLength="false" />
+          <Property Name="LomadeeId" Type="Int32" />
+          <Property Name="Descricao" Type="String" MaxLength="300" Unicode="false" FixedLength="false" />
+          <Property Name="Tags" Type="String" MaxLength="300" Unicode="false" FixedLength="false" />
+          <Property Name="Imagem" Type="String" MaxLength="50" Unicode="false" FixedLength="false" />
+          <NavigationProperty Name="Categoria" Relationship="shoppingxModel.FK_Subcategoria_Categoria" FromRole="Subcategoria" ToRole="Categoria" />
+          <NavigationProperty Name="Produtoes" Relationship="shoppingxModel.FK_Produto_Subcategoria" FromRole="Subcategoria" ToRole="Produto" />
+        </EntityType>
+        <EntityType Name="sysdiagram">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="String" Nullable="false" MaxLength="128" Unicode="true" FixedLength="false" />
+          <Property Name="principal_id" Type="Int32" Nullable="false" />
+          <Property Name="diagram_id" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+          <Property Name="version" Type="Int32" />
+          <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
+        </EntityType>
+        <EntityType Name="Usuario">
+          <Key>
+            <PropertyRef Name="UsuarioId" />
+          </Key>
+          <Property Name="UsuarioId" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+          <Property Name="Nome" Type="String" MaxLength="50" Unicode="false" FixedLength="false" />
+          <Property Name="Email" Type="String" MaxLength="100" Unicode="false" FixedLength="false" />
+          <Property Name="Senha" Type="String" MaxLength="20" Unicode="false" FixedLength="false" />
+          <Property Name="DataCriacao" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="Usuprods" Relationship="shoppingxModel.FK_Usuprod_Usuario" FromRole="Usuario" ToRole="Usuprod" />
+        </EntityType>
+        <Association Name="FK_Subcategoria_Categoria">
+          <End Role="Categoria" Type="shoppingxModel.Categoria" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Subcategoria" Type="shoppingxModel.Subcategoria" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Categoria">
+              <PropertyRef Name="CategoriaId" />
+            </Principal>
+            <Dependent Role="Subcategoria">
+              <PropertyRef Name="CategoriaId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Preco_Loja">
+          <End Role="Loja" Type="shoppingxModel.Loja" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Preco" Type="shoppingxModel.Preco" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Loja">
+              <PropertyRef Name="LojaId" />
+            </Principal>
+            <Dependent Role="Preco">
+              <PropertyRef Name="LojaId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Preco_Produto">
+          <End Role="Produto" Type="shoppingxModel.Produto" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Preco" Type="shoppingxModel.Preco" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Produto">
+              <PropertyRef Name="ProdutoId" />
+            </Principal>
+            <Dependent Role="Preco">
+              <PropertyRef Name="ProdutoId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Produto_Subcategoria">
+          <End Role="Subcategoria" Type="shoppingxModel.Subcategoria" Multiplicity="0..1" />
+          <End Role="Produto" Type="shoppingxModel.Produto" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Subcategoria">
+              <PropertyRef Name="SubcategoriaId" />
+            </Principal>
+            <Dependent Role="Produto">
+              <PropertyRef Name="SubcategoriaId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="Usuprod">
+          <Key>
+            <PropertyRef Name="UsuProdId" />
+          </Key>
+          <Property Type="Int32" Name="UsuProdId" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="Int32" Name="UsuarioId" />
+          <Property Type="Int32" Name="ProdutoId" />
+          <Property Type="String" Name="Acao" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Type="DateTime" Name="Data" Precision="3" />
+          <NavigationProperty Name="Produto" Relationship="shoppingxModel.FK_Usuprod_Produto" FromRole="Usuprod" ToRole="Produto" />
+          <NavigationProperty Name="Usuario" Relationship="shoppingxModel.FK_Usuprod_Usuario" FromRole="Usuprod" ToRole="Usuario" />
+        </EntityType>
+        <Association Name="FK_Usuprod_Produto">
+          <End Type="shoppingxModel.Produto" Role="Produto" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="shoppingxModel.Usuprod" Role="Usuprod" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Produto">
+              <PropertyRef Name="ProdutoId" />
+            </Principal>
+            <Dependent Role="Usuprod">
+              <PropertyRef Name="ProdutoId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Usuprod_Usuario">
+          <End Type="shoppingxModel.Usuario" Role="Usuario" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="shoppingxModel.Usuprod" Role="Usuprod" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Usuario">
+              <PropertyRef Name="UsuarioId" />
+            </Principal>
+            <Dependent Role="Usuprod">
+              <PropertyRef Name="UsuarioId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="shoppingxModelStoreContainer" CdmEntityContainer="shoppingxEntities">
+          <EntitySetMapping Name="Categorias">
+            <EntityTypeMapping TypeName="shoppingxModel.Categoria">
+              <MappingFragment StoreEntitySet="Categoria">
+                <ScalarProperty Name="CategoriaId" ColumnName="CategoriaId" />
+                <ScalarProperty Name="Nome" ColumnName="Nome" />
+                <ScalarProperty Name="lomadeeId" ColumnName="lomadeeId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Lojas">
+            <EntityTypeMapping TypeName="shoppingxModel.Loja">
+              <MappingFragment StoreEntitySet="Loja">
+                <ScalarProperty Name="LojaId" ColumnName="LojaId" />
+                <ScalarProperty Name="LomadeeId" ColumnName="LomadeeId" />
+                <ScalarProperty Name="Nome" ColumnName="Nome" />
+                <ScalarProperty Name="Logo" ColumnName="Logo" />
+                <ScalarProperty Name="Avaliacao" ColumnName="Avaliacao" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Precoes">
+            <EntityTypeMapping TypeName="shoppingxModel.Preco">
+              <MappingFragment StoreEntitySet="Preco">
+                <ScalarProperty Name="PrecoId" ColumnName="PrecoId" />
+                <ScalarProperty Name="ProdutoId" ColumnName="ProdutoId" />
+                <ScalarProperty Name="LojaId" ColumnName="LojaId" />
+                <ScalarProperty Name="Preco1" ColumnName="Preco" />
+                <ScalarProperty Name="Data" ColumnName="Data" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Produtoes">
+            <EntityTypeMapping TypeName="shoppingxModel.Produto">
+              <MappingFragment StoreEntitySet="Produto">
+                <ScalarProperty Name="ProdutoId" ColumnName="ProdutoId" />
+                <ScalarProperty Name="LomadeeId" ColumnName="LomadeeId" />
+                <ScalarProperty Name="Nome" ColumnName="Nome" />
+                <ScalarProperty Name="Clicks" ColumnName="Clicks" />
+                <ScalarProperty Name="Compras" ColumnName="Compras" />
+                <ScalarProperty Name="Receita" ColumnName="Receita" />
+                <ScalarProperty Name="SubcategoriaId" ColumnName="SubcategoriaId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Subcategorias">
+            <EntityTypeMapping TypeName="shoppingxModel.Subcategoria">
+              <MappingFragment StoreEntitySet="Subcategoria">
+                <ScalarProperty Name="SubcategoriaId" ColumnName="SubcategoriaId" />
+                <ScalarProperty Name="CategoriaId" ColumnName="CategoriaId" />
+                <ScalarProperty Name="Nome" ColumnName="Nome" />
+                <ScalarProperty Name="LomadeeId" ColumnName="LomadeeId" />
+                <ScalarProperty Name="Descricao" ColumnName="Descricao" />
+                <ScalarProperty Name="Tags" ColumnName="Tags" />
+                <ScalarProperty Name="Imagem" ColumnName="Imagem" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="sysdiagrams">
+            <EntityTypeMapping TypeName="shoppingxModel.sysdiagram">
+              <MappingFragment StoreEntitySet="sysdiagrams">
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="principal_id" ColumnName="principal_id" />
+                <ScalarProperty Name="diagram_id" ColumnName="diagram_id" />
+                <ScalarProperty Name="version" ColumnName="version" />
+                <ScalarProperty Name="definition" ColumnName="definition" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Usuarios">
+            <EntityTypeMapping TypeName="shoppingxModel.Usuario">
+              <MappingFragment StoreEntitySet="Usuario">
+                <ScalarProperty Name="UsuarioId" ColumnName="UsuarioId" />
+                <ScalarProperty Name="Nome" ColumnName="Nome" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="Senha" ColumnName="Senha" />
+                <ScalarProperty Name="DataCriacao" ColumnName="DataCriacao" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Usuprods">
+            <EntityTypeMapping TypeName="shoppingxModel.Usuprod">
+              <MappingFragment StoreEntitySet="Usuprod">
+                <ScalarProperty Name="Data" ColumnName="Data" />
+                <ScalarProperty Name="Acao" ColumnName="Acao" />
+                <ScalarProperty Name="ProdutoId" ColumnName="ProdutoId" />
+                <ScalarProperty Name="UsuarioId" ColumnName="UsuarioId" />
+                <ScalarProperty Name="UsuProdId" ColumnName="UsuProdId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="True" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="True" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

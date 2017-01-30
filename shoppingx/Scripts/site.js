@@ -34,3 +34,5 @@ function moeda(valor, casas, separdor_decimal, separador_milhar) {
 
 }
 
+
+

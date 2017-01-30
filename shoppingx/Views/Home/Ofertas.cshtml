@@ -1,30 +1,28 @@
-﻿@{
+﻿@model shoppingx.Models.Subcategoria
+
+@{
     ViewBag.Title = "Ofertas";
 }
 
 <script>
     
 
-    function Produto(nome, preco, imagem, loja, link) {
+    function Produto(id, nome, preco, imagem, loja, link, garimpa) {
         this.nome = nome;
         this.preco = moeda(preco,2,',','.');
         this.imagem = imagem;
         this.loja = loja;
-        this.link = link
+        this.link = link;
+        this.id = id;
+        this.garimpa = garimpa;
     }
 
     
 
     $(document).ready(function () {
 
-        var produtos = [];
-        var produt = new Produto("A", 1);
-        var productname = "";
-        var pricemin = "";
-        var imageurl = "";
-        var seller = "";
-        var link = "";
-
+         
+        
         //lendo querystring
         var urlParams = new URLSearchParams(window.location.search);
 
@@ -73,7 +71,7 @@
         //keyword
         if (k != null && k != "") {
             urlr += "&keyword=" + k;
-            $("#title").text("Busca por " + k);
+            $("#title").html("<a href='/home/ofertas?c=@Model.LomadeeId&page=1'>@Model.Nome</a> > Busca por " + k);
             $("#palavra").val(k);
         }
         //sort
@@ -85,25 +83,47 @@
             urlr += "&page=" + page;
         }
         
+        //helper variables
+        var produtos = [];
+        var produt = new Produto("A", 1);
+        var productid = "";
+        var productname = "";
+        var pricemin = "";
+        var imageurl = "";
+        var seller = "";
+        var link = "";
+        var garimpa = true;
 
+        //angular
         var app = angular.module('myApp', []);
         app.controller('customersCtrl', function ($scope, $http) {
             
 
             $http.get(urlr).then(function (response) {
                 for (i in response.data.offer) {
+                    if ('productid' in response.data.offer[i].offer) {
+                        productid = response.data.offer[i].offer.productid;
+                        garimpa = false;
+                    } else {
+                        garimpa = true;
+                    }
+
                     productname = response.data.offer[i].offer.offername;
                     pricemin = response.data.offer[i].offer.price.value;
-                    imageurl = response.data.offer[i].offer.thumbnail.url;
-                    seller = response.data.offer[i].offer.seller.thumbnail.url;
+                    if ('thumbnail' in response.data.offer[i].offer) {
+                        imageurl = response.data.offer[i].offer.thumbnail.url;
+                    }
+                    if ('thumbnail' in response.data.offer[i].offer.seller) {
+                        seller = response.data.offer[i].offer.seller.thumbnail.url;
+                    }
                     link = response.data.offer[i].offer.links[0].link.url;
-                    produt = new Produto(productname, pricemin, imageurl, seller, link);
+                    produt = new Produto(productid, productname, pricemin, imageurl, seller, link);
                     produtos.push(produt);
                 }
                 //alert(pNome[1]);
                 $scope.mylist = produtos;
                 if (produtos.length < 1) {
-                    $scope.vazio = "Não há produtos com o nome indicado.";
+                    $scope.vazio = "Não há produtos com o nome indicado nesta categoria.";
                 }
             });
 
@@ -114,49 +134,54 @@
 <div class="conteudo">
     <div class="col-md-2 sidebar desktop">
         @*<img src="" height="70px" />*@
-        <h1>Smartphones e Telefonia</h1>
+        <h1>@Model.Nome</h1>
+        <h4>@Model.Categoria.Nome</h4>
         <hr />
-        <p>Busca na categoria:</p>
-        <p>
-            <input type="text" id="palavra" placeholder="Buscar o produto" style="width:80%" />
+        <p class="esq-align marginL">Busca na categoria:</p>
+        <form id="form1">
+            <input type="text" id="palavra" placeholder="Buscar o produto" />
             <input type="button" id="buscar" value="Ok" />
-        </p>
+        </form>
         <hr />
-        <p><b>Procurar também por:</b></p>
+        
+        @*<p><b>Procurar também por:</b></p>
         <p><a href="/home/ofertas?c=77&page=1">Smartphones e Celulares</a></p>
-        <p><a href="#">Telefonia Fixa</a></p>
+        <p><a href="#">Telefonia Fixa</a></p>*@
         @*<ul>
             <li><b>pelo nome do produto:</b> digite uma parte do nome do produto (ex. para Samsung Galaxy 5, digite galaxy 5)</li>
         </ul>*@
     </div>
     <div class="col-md-10">
-        <h3 id="title">>> Smartphones e Celulares</h3>
+        <h3 id="title">@Model.Nome</h3>
         <hr />
         
         <div ng-app="myApp" ng-controller="customersCtrl" class="conteudo">
-            <span>{{ vazio }}</span>
+            <span class="fonte16bold">{{ vazio }}</span>
             <div class="produto-lista" ng-repeat="x in mylist">
 
-                <a href="{{ x.link }}" title="{{ x.nome }}">
+                
                     <div>
+                        <a href="{{ x.link }}" title="{{ x.nome }}">
                         <img src="{{ x.imagem }}" height="150px" /><br />
                         <div class="fonte14bold height70">{{ x.nome.substring(0, 80); }}..</div>
                         <br />
                         <span class="fonte18bold red">R$ {{ x.preco }}</span><br />
-                        <button type="button" class="btn btn-success marginstd">Comprar</button>
-                        <button type="button" class="btn btn-success marginstd">Garimpar</button>
+                         </a>
+                        <button type="button" class="btn btn-success marginstd" title="Compre esse produto nessa loja">Comprar</button>
+                        <a href="/home/produto?id={{ x.id }}&sort=price" ng-show="x.id" class="btn btn-success marginstd ng-hide" title="Garimpar menor preço desse produto em todas as lojas">Garimpar</a>
+                        <a href="/home/produto/" class="btn btn-success marginstd" title="Siga o preço desse produto">Seguir</a>
                         <br />
                         <br />
                         <img src="{{ x.loja }}" />
                     </div>
-                </a>
+                
 
 
             </div>
         </div>
 
         <div class="pagination">
-            <a id="ant" href="">< Anterior</a>&nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp;<a id="prox" href="">Próximo ></a>
+            <a id="ant" href="#">< Anterior</a>&nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp;<a id="prox" href="#">Próximo ></a>
         </div>
 
 
